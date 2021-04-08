@@ -95,6 +95,6 @@ int main(int argc, const char * argv[]) {
     
     Solution solu;
     string str("abcabcbb");
-    std::cout << solu.lengthOfLongestSubstring(str);
+    std::cout << solu.lengthOfLongestSubstringss(str);
     return 0;
 }
