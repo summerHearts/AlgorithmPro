@@ -49,34 +49,49 @@
 using namespace std;
 
 
-void print( vector<int> vector1){
-    for(int i=0 ;i<vector1.size();i++)
-        cout<<vector1[i]<<" ";
-    
-    cout<<endl;
-}
-
-int removeElement(vector<int>& nums, int val) {
-    int idx=0;
-    for(int i=0;i<nums.size();i++) {
-        if(nums[i]!=val) {
-            nums[idx] = nums[i];
-            idx ++;
+// 时间复杂度：O(n^2)
+// 空间复杂度：O(1)
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int size = nums.size();
+        for (int i = 0; i < size; i++) {
+            if (nums[i] == val) { // 发现需要移除的元素，就将数组集体向前移动一位
+                for (int j = i + 1; j < size; j++) {
+                    nums[j - 1] = nums[j];
+                }
+                i--; // 因为下表i以后的数值都向前移动了一位，所以i也向前移动一位
+                size--; // 此时数组的大小-1
+            }
         }
+        return size;
+
     }
-    return idx;
-}
+    
+    int removeElement2(vector<int>& nums, int val) {
+        int slowIndex = 0;
+        for (int fastIndex = 0; fastIndex < nums.size(); fastIndex++) {
+            if (val != nums[fastIndex]) {
+                nums[slowIndex++] = nums[fastIndex];
+            }
+        }
+        return slowIndex;
+    }
+};
+
 
 int main(int argc, const char * argv[]) {
     int a[10] = {1,1,1,3,3,4,3,2,4,2};
     sort(a,a+10);
     
+    Solution sol;
+
     vector<int> b;
     for(int i=0;i< 10;i++){
         b.push_back(a[i]);
     }
     cout<<endl;
 
-    cout << removeElement(b ,4) << endl;
+    cout << sol.removeElement(b ,4) << endl;
     return 0;
 }

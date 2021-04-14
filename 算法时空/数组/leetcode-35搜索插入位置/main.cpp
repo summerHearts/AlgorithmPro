@@ -38,18 +38,48 @@ using namespace std;
 class Solution {
 public:
     long searchInsert(vector<int>& nums, int target) {
-        //end() 函数返回一个指向当前vector末尾元素的下一位置的迭代器.要访问末尾元素,需要先将此迭代器减1。
-        auto first = nums.begin(), last = nums.end();  //end()返回尾地址，尾地址不指向任何存储的元素，而是标志vector的结束。
-        while (first < last) {
-            auto mid = first + ((last - first) >> 1); //二分查找法
-            if (*mid < target) {
-                first = mid + 1;
-            } else {
-                last = mid;
+        long n = nums.size();
+        long left = 0;
+        long right = n; // 定义target在左闭右开的区间里，[left, right)  target
+           while (left < right) { // 因为left == right的时候，在[left, right)是无效的空间
+               long middle = left + ((right - left) / 2);
+               if (nums[middle] > target) {
+                   right = middle; // target 在左区间，在[left, middle)中
+               } else if (nums[middle] < target) {
+                   left = middle + 1; // target 在右区间，在 [middle+1, right)中
+               } else { // nums[middle] == target
+                   return middle; // 数组中找到目标值的情况，直接返回下标
+               }
+           }
+           // 分别处理如下四种情况
+           // 目标值在数组所有元素之前 [0,0)
+           // 目标值等于数组中某一个元素 return middle
+           // 目标值插入数组中的位置 [left, right) ，return right 即可
+           // 目标值在数组所有元素之后的情况 [left, right)，return right 即可
+           return right;
+       }
+    
+    long searchInsert2(vector<int>& nums, int target) {
+            long n = nums.size();
+            long left = 0;
+            long right = n - 1; // 定义target在左闭右闭的区间里，[left, right]
+            while (left <= right) { // 当left==right，区间[left, right]依然有效
+                long middle = left + ((right - left) / 2);// 防止溢出 等同于(left + right)/2
+                if (nums[middle] > target) {
+                    right = middle - 1; // target 在左区间，所以[left, middle - 1]
+                } else if (nums[middle] < target) {
+                    left = middle + 1; // target 在右区间，所以[middle + 1, right]
+                } else { // nums[middle] == target
+                    return middle;
+                }
             }
+            // 分别处理如下四种情况
+            // 目标值在数组所有元素之前  [0, -1]
+            // 目标值等于数组中某一个元素  return middle;
+            // 目标值插入数组中的位置 [left, right]，return  right + 1
+            // 目标值在数组所有元素之后的情况 [left, right]， return right + 1
+            return right + 1;
         }
-        return first - nums.begin();
-    }
 };
 int main(int argc, const char * argv[]) {
     
